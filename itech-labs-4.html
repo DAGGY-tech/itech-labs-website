@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itech Labs Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="particles.js"></script>
+    <script src="typewriter.js"></script>
+</head>
+<body>
+    <div id="hero-section">
+        <h1>Welcome to Itech Labs</h1>
+        <div id="typewriter-container">
+            <h2 class="typewriter">Creative Solutions for Your Business</h2>
+        </div>
+    </div>
+    <section id="services">
+        <h2>Our Services</h2>
+        <ul>
+            <li>Web Development</li>
+            <li>Mobile Application Development</li>
+            <li>Cloud Solutions</li>
+        </ul>
+    </section>
+    <section id="projects">
+        <h2>Our Projects</h2>
+        <p>Check out our amazing projects here.</p>
+    </section>
+    <section id="availability">
+        <h2>Availability</h2>
+        <p>We are available for new projects. Get in touch!</p>
+    </section>
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are a team of passionate developers.</p>
+    </section>
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: contact@itechlabs.com</p>
+    </section>
+    <footer>
+        <p>&copy; 2026 Itech Labs. All Rights Reserved.</p>
+    </footer>
+    <script>
+        // Initialize particles
+        particlesJS.load('particles-js', 'particles.json', function() {
+            console.log('callback - particles.js config loaded');
+        });
+
+        // Typewriter effect
+        const typewriter = new Typewriter('#typewriter-container', {
+          loop: true,
+        });
+        typewriter
+          .typeString('Creative Solutions for Your Business')
+          .pauseFor(2500)
+          .deleteAll()
+          .start();
+    </script>
+</body>
+</html>
