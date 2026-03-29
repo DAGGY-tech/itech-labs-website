@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itech Labs — Design. Build. Deliver.</title>
+<meta name="description" content="Itech Labs is a premium creative studio based in Kampala, Uganda. Graphic design, video editing, web design, app development, and IT support. Available 24/7 worldwide.">
+<meta name="keywords" content="Itech Labs, graphic design Uganda, web design Kampala, app development, IT support, creative studio">
+<meta name="robots" content="index, follow">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#0071e3; --blue-lt:#2997ff; --blue-dk:#0056b3;
+  --white:#ffffff; --off:#f5f5f7; --off2:#e8e8ed;
+  --dark:#1d1d1f; --black:#000000; --mid:#86868b;
+  --green:#30d158;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--white);
+  color:var(--dark);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* CURSOR */
+#cur {
+  position:fixed; width:10px; height:10px; border-radius:50%;
+  background:var(--dark); pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .25s,height .25s,background .25s,border-radius .25s;
+  mix-blend-mode:multiply;
+}
+#cur.expanded { width:44px; height:44px; background:rgba(0,113,227,0.12); }
+#cur.white-mode { background:rgba(255,255,255,0.4); mix-blend-mode:screen; }
+#cur-ring {
+  position:fixed; width:36px; height:36px; border-radius:50%;
+  border:1px solid rgba(0,113,227,0.4);
+  pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:all .12s ease;
+}
+
+/* GLOBAL KEYFRAMES */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes shine    { to{background-position:200% center} }
+@keyframes pulse-g  { 0%,100%{box-shadow:0 0 0 0 rgba(48,209,88,.6)} 50%{box-shadow:0 0 0 6px rgba(48,209,88,0)} }
+@keyframes scanline { 0%{top:-2px} 100%{top:100%} }
+@keyframes shimmer  { 0%{transform:translateX(-100%)} 100%{transform:translateX(200%)} }
+@keyframes marquee  { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes countUp  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes ripple   { to{transform:scale(4);opacity:0} }
+
+/* NAV */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:52px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 24px;
+  background:rgba(255,255,255,0.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+  transition:background .3s;
+}
+.nav-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+.nav-links { display:flex; gap:28px; list-style:none; }
+.nav-links a { font-size:13px; color:var(--dark); text-decoration:none; opacity:.8; transition:opacity .15s,color .15s; position:relative; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--blue); transition:width .3s; }
+.nav-links a:hover { opacity:1; color:var(--blue); }
+.nav-links a:hover::after { width:100%; }
+.nav-cta {
+  font-size:13px; font-weight:500; color:#fff;
+  background:var(--blue); padding:7px 18px; border-radius:980px;
+  border:none; cursor:none; transition:background .15s,transform .2s,box-shadow .2s;
+}
+.nav-cta:hover { background:var(--blue-dk); transform:scale(1.04); box-shadow:0 4px 16px rgba(0,113,227,0.35); }
+@media(max-width:640px){ .nav-links{display:none} }
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .proj-grid-inner  { grid-template-columns:1fr!important; }
+  .svc-grid-inner   { grid-template-columns:1fr!important; }
+  .stats-grid-inner { grid-template-columns:repeat(2,1fr)!important; }
+  .about-grid-inner { grid-template-columns:1fr!important; }
+  .footer-grid-inner{ grid-template-columns:1fr 1fr!important; }
+  .avail-grid-inner { grid-template-columns:1fr!important; }
+}
+@media(max-width:480px){
+  .stats-grid-inner { grid-template-columns:repeat(2,1fr)!important; }
+  .footer-grid-inner{ grid-template-columns:1fr!important; }
+}
+
+/* SCROLL REVEAL */
+.reveal { opacity:0; transform:translateY(32px); transition:opacity .9s ease,transform .9s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-l { opacity:0; transform:translateX(-32px); transition:opacity .9s ease,transform .9s ease; }
+.reveal-l.visible { opacity:1; transform:translateX(0); }
+.reveal-r { opacity:0; transform:translateX(32px); transition:opacity .9s ease,transform .9s ease; }
+.reveal-r.visible { opacity:1; transform:translateX(0); }
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+/* ── COLORS ── */
+const B   = '#0071e3';
+const BL  = '#2997ff';
+const BDK = '#0056b3';
+const DK  = '#1d1d1f';
+const W   = '#ffffff';
+const OFF = '#f5f5f7';
+
+/* ── LOGO SVG ── */
+const Logo = ({ size=20, color='#fff' }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+    <rect x="2" y="2" width="3" height="16" fill={color}/>
+    <path d="M5 2 Q18 2 18 10 Q18 18 5 18" stroke={color} strokeWidth="2.8" fill="none" strokeLinecap="round"/>
+    <line x1="5" y1="10" x2="15" y2="10" stroke={color==='#fff'?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.2)'} strokeWidth="1.2"/>
+    <circle cx="5" cy="10" r="1.5" fill={BL} opacity=".8"/>
+  </svg>
+);
+
+/* ── CURSOR ── */
+function Cursor() {
+  const cur  = useRef(null);
+  const ring = useRef(null);
+  let rx=0, ry=0;
+
+  useEffect(() => {
+    const el  = document.getElementById('cur');
+    const rel = document.getElementById('cur-ring');
+    let mx=0, my=0;
+
+    const move = e => { mx=e.clientX; my=e.clientY; el.style.left=mx+'px'; el.style.top=my+'px'; };
+    document.addEventListener('mousemove', move);
+
+    let animId;
+    const animRing = () => {
+      rx += (mx-rx)*.13; ry += (my-ry)*.13;
+      rel.style.left=rx+'px'; rel.style.top=ry+'px';
+      animId = requestAnimationFrame(animRing);
+    };
+    animRing();
+
+    const hover = () => el.classList.add('expanded');
+    const leave = () => el.classList.remove('expanded');
+    document.querySelectorAll('a,button,.svc-hover,.proj-hover,.avail-card-h').forEach(e => {
+      e.addEventListener('mouseenter', hover);
+      e.addEventListener('mouseleave', leave);
+    });
+
+    return () => { document.removeEventListener('mousemove', move); cancelAnimationFrame(animId); };
+  }, []);
+  return null;
+}
+
+/* ── PARTICLE CANVAS ── */
+function ParticleCanvas({ dark=true }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas.getContext('2d');
+    let W, H, anim;
+    const resize = () => { W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight; };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const cols = dark
+      ? ['rgba(41,151,255,0.5)','rgba(255,255,255,0.3)','rgba(0,113,227,0.4)']
+      : ['rgba(0,113,227,0.25)','rgba(41,151,255,0.3)','rgba(0,86,179,0.2)'];
+
+    class P {
+      constructor() { this.reset(); this.y = Math.random()*H; }
+      reset() {
+        this.x=Math.random()*W; this.y=-5;
+        this.r=Math.random()*1.4+.3; this.sp=Math.random()*.45+.08;
+        this.op=Math.random()*.5+.1; this.dx=(Math.random()-.5)*.35;
+        this.c=cols[Math.floor(Math.random()*cols.length)];
+      }
+      step() { this.y+=this.sp; this.x+=this.dx; if(this.y>H+5)this.reset(); }
+      draw() { ctx.save(); ctx.globalAlpha=this.op; ctx.fillStyle=this.c; ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+    }
+
+    const pts = Array.from({length:80}, ()=>new P());
+
+    const drawGrid = () => {
+      ctx.save(); ctx.strokeStyle=dark?'rgba(255,255,255,0.03)':'rgba(0,113,227,0.04)';
+      ctx.lineWidth=1;
+      for(let x=0;x<W;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+      for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+      ctx.restore();
+    };
+
+    const loop = () => {
+      ctx.clearRect(0,0,W,H); drawGrid();
+      for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+        if(d<70){ ctx.save(); ctx.globalAlpha=(1-d/70)*.1; ctx.strokeStyle=dark?'#2997ff':'#0071e3'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.stroke(); ctx.restore(); }
+      }
+      pts.forEach(p=>{p.step();p.draw();});
+      anim=requestAnimationFrame(loop);
+    };
+    loop();
+    return () => { cancelAnimationFrame(anim); window.removeEventListener('resize',resize); };
+  }, []);
+  return <canvas ref={ref} style={{position:'absolute',inset:0,width:'100%',height:'100%'}}/>;
+}
+
+/* ── TYPEWRITER ── */
+function Typewriter({ words }) {
+  const [text, setText] = useState('');
+  const [wIdx, setWIdx] = useState(0);
+  const [typing, setTyping] = useState(true);
+
+  useEffect(() => {
+    const word = words[wIdx];
+    let t;
+    if(typing) {
+      if(text.length < word.length) t = setTimeout(()=>setText(word.slice(0,text.length+1)), 80);
+      else t = setTimeout(()=>setTyping(false), 1800);
+    } else {
+      if(text.length > 0) t = setTimeout(()=>setText(text.slice(0,-1)), 40);
+      else { setWIdx((wIdx+1)%words.length); setTyping(true); }
+    }
+    return () => clearTimeout(t);
+  }, [text, typing, wIdx]);
+
+  return (
+    <span>
+      <span style={{
+        background:`linear-gradient(90deg,#fff 0%,${BL} 50%,#fff 100%)`,
+        backgroundSize:'200% auto',
+        WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent',
+        backgroundClip:'text',
+        animation:'shine 3s linear infinite',
+      }}>{text}</span>
+      <span style={{animation:'blink 1s infinite',color:BL}}>|</span>
+    </span>
+  );
+}
+
+/* ── COUNTER ── */
+function Counter({ target, suffix='' }) {
+  const [val, setVal] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e])=>{
+      if(e.isIntersecting) {
+        const num = parseInt(target);
+        if(isNaN(num)){setVal(target);io.disconnect();return;}
+        let start=0, dur=1600, t0=null;
+        const step = ts => {
+          if(!t0)t0=ts;
+          const p=Math.min((ts-t0)/dur,1);
+          setVal(Math.floor(p*p*num));
+          if(p<1)requestAnimationFrame(step); else setVal(num);
+        };
+        requestAnimationFrame(step);
+        io.disconnect();
+      }
+    },{threshold:.5});
+    if(ref.current) io.observe(ref.current);
+    return () => io.disconnect();
+  },[]);
+  return <span ref={ref}>{val}{suffix}</span>;
+}
+
+/* ── USE REVEAL ── */
+function useReveal() {
+  useEffect(()=>{
+    const io = new IntersectionObserver(entries=>entries.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+    }),{threshold:.08});
+    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(r=>io.observe(r));
+    return ()=>io.disconnect();
+  },[]);
+}
+
+/* ══════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════ */
+
+/* ── HERO ── */
+function Hero() {
+  const [mx,setMx]=useState(0), [my,setMy]=useState(0);
+  const heroRef=useRef(null);
+  const onMove=e=>{
+    if(!heroRef.current)return;
+    const r=heroRef.current.getBoundingClientRect();
+    setMx((e.clientX-r.left)/r.width-.5);
+    setMy((e.clientY-r.top)/r.height-.5);
+  };
+  return (
+    <section ref={heroRef} onMouseMove={onMove} style={{
+      minHeight:'100vh', background:'#000',
+      display:'flex',flexDirection:'column',
+      alignItems:'center',justifyContent:'center',
+      textAlign:'center', padding:'100px 24px 80px',
+      position:'relative', overflow:'hidden',
+    }}>
+      <ParticleCanvas dark/>
+      {/* scanline */}
+      <div style={{position:'absolute',left:0,right:0,height:1,background:'linear-gradient(to right,transparent,#2997ff,transparent)',opacity:.15,animation:'scanline 8s linear infinite',pointerEvents:'none'}}/>
+      {/* grid */}
+      <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(0,113,227,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,113,227,0.05) 1px,transparent 1px)',backgroundSize:'60px 60px',mask:'radial-gradient(ellipse at center,black 20%,transparent 75%)',pointerEvents:'none'}}/>
+      {/* parallax inner */}
+      <div style={{
+        position:'relative',zIndex:2,maxWidth:760,
+        transform:`translate(${mx*12}px,${my*8}px)`,
+        transition:'transform .1s ease-out',
+      }}>
+        <div style={{fontSize:12,fontWeight:600,letterSpacing:'.15em',color:BL,textTransform:'uppercase',marginBottom:20,opacity:0,animation:'fadeUp .8s .2s forwards'}}>
+          Creative Studio · Kampala, Uganda · Global
+        </div>
+        <h1 style={{
+          fontSize:'clamp(52px,10vw,100px)',fontWeight:800,
+          letterSpacing:'-2.5px',lineHeight:1.0,
+          color:'#fff', marginBottom:16,
+          opacity:0,animation:'fadeUp .8s .4s forwards',
+        }}>
+          Think it.<br/>
+          <Typewriter words={['Build it.','Design it.','Deliver it.','Launch it.']}/>
+        </h1>
+        <p style={{fontSize:'clamp(16px,2.2vw,21px)',fontWeight:300,color:'rgba(255,255,255,0.6)',lineHeight:1.7,maxWidth:560,margin:'0 auto 44px',opacity:0,animation:'fadeUp .8s .6s forwards'}}>
+          Graphic design, video editing, web design, app development, and IT support — all under one roof. Built for brands that refuse to be average.
+        </p>
+        <div style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap',opacity:0,animation:'fadeUp .8s .8s forwards'}}>
+          <button className="nav-cta" style={{fontSize:15,padding:'14px 34px',borderRadius:980}} onClick={()=>document.getElementById('services').scrollIntoView({behavior:'smooth'})}>
+            See Our Services
+          </button>
+          <button onClick={()=>document.getElementById('contact').scrollIntoView({behavior:'smooth'})} style={{
+            fontSize:15,fontWeight:500,padding:'13px 34px',borderRadius:980,
+            background:'transparent',color:BL,
+            border:`1px solid rgba(41,151,255,.45)`,cursor:'none',
+            transition:'all .2s',
+          }}
+          onMouseEnter={e=>{e.target.style.background='rgba(41,151,255,.1)';e.target.style.transform='scale(1.04)';}}
+          onMouseLeave={e=>{e.target.style.background='transparent';e.target.style.transform='scale(1)';}}>
+            Get In Touch ↓
+          </button>
+        </div>
+      </div>
+      {/* scroll hint */}
+      <div style={{position:'absolute',bottom:40,left:'50%',transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:8,color:'rgba(255,255,255,.25)',fontSize:10,letterSpacing:3,textTransform:'uppercase',animation:'float 2.5s ease-in-out infinite'}}>
+        <div style={{width:1,height:36,background:'linear-gradient(to bottom,rgba(41,151,255,.4),transparent)'}}/>
+        <span>Scroll</span>
+      </div>
+    </section>
+  );
+}
+
+/* ── AVAIL STRIP ── */
+function AvailStrip() {
+  return (
+    <div style={{background:OFF,borderBottom:'1px solid #e8e8ed',padding:'14px 24px',display:'flex',alignItems:'center',justifyContent:'center',gap:10,fontSize:14,color:'#86868b',overflow:'hidden',position:'relative'}}>
+      <div style={{position:'absolute',top:0,bottom:0,width:'60%',background:'linear-gradient(90deg,transparent,rgba(0,113,227,.05),transparent)',animation:'shimmer 3s linear infinite'}}/>
+      <div style={{width:8,height:8,borderRadius:'50%',background:'#30d158',animation:'pulse-g 2s infinite',flexShrink:0}}/>
+      <span><strong style={{color:DK}}>Itech Labs is available 24/7</strong> — Any timezone. Any deadline. Always ready.</span>
+    </div>
+  );
+}
+
+/* ── MARQUEE ── */
+function Marquee() {
+  const items = ['Graphic Design','Video Editing','Web Design','App Development','IT Support','24/7 Available','Kampala Uganda','Global Reach'];
+  const all = [...items,...items];
+  return (
+    <div style={{background:'#000',padding:'20px 0',overflow:'hidden',borderTop:'1px solid rgba(255,255,255,.06)',borderBottom:'1px solid rgba(255,255,255,.06)'}}>
+      <div style={{display:'flex',animation:'marquee 18s linear infinite',width:'max-content'}}>
+        {all.map((t,i)=>(
+          <div key={i} style={{display:'flex',alignItems:'center',gap:28,marginRight:28}}>
+            <span style={{fontSize:13,fontWeight:500,color:'rgba(255,255,255,.5)',letterSpacing:'.1em',textTransform:'uppercase',whiteSpace:'nowrap'}}>{t}</span>
+            <span style={{color:B,fontSize:18}}>◆</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── STATS ── */
+function Stats() {
+  const items=[
+    {num:'24',suf:'/7',label:'Always Available'},
+    {num:'6',suf:'+',label:'Projects Delivered'},
+    {num:'5',suf:'',label:'Core Services'},
+    {num:'∞',suf:'',label:'Ambition'},
+  ];
+  return (
+    <div className="stats-grid-inner reveal" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:2,background:'#e8e8ed'}}>
+      {items.map((s,i)=>(
+        <div key={i} className="svc-hover" style={{background:i%2===0?OFF:W,padding:'36px 24px',textAlign:'center',transition:'background .25s,transform .25s',cursor:'none'}}
+          onMouseEnter={e=>{e.currentTarget.style.background='#e8f0fe';e.currentTarget.style.transform='translateY(-2px)';}}
+          onMouseLeave={e=>{e.currentTarget.style.background=i%2===0?OFF:W;e.currentTarget.style.transform='translateY(0)';}}>
+          <div style={{fontSize:48,fontWeight:800,color:B,lineHeight:1,letterSpacing:'-1px',marginBottom:8}}>
+            {typeof s.num==='string'&&isNaN(s.num)?s.num:<Counter target={s.num}/>}{s.suf}
+          </div>
+          <div style={{fontSize:11,fontWeight:600,color:'#86868b',letterSpacing:'.1em',textTransform:'uppercase'}}>{s.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── SERVICES ── */
+function Services() {
+  const svcs = [
+    {icon:'🎨',n:'01',name:'Graphic Design',desc:'Visual identity systems, brand collateral, print materials, social graphics, and packaging. Visual systems that make your brand undeniable.',tags:['Logos','Branding','Print','Social']},
+    {icon:'🎬',n:'02',name:'Video Editing',desc:'Cinematic promos, motion graphics, social reels, corporate films, and color grading. Stories told with intention and precision.',tags:['Promos','Motion','Reels','Color Grade']},
+    {icon:'🌐',n:'03',name:'Web Design',desc:'Landing pages, full websites, UI/UX design, and e-commerce. Pixel-perfect, fast-loading, and built to convert visitors into clients.',tags:['UI/UX','Landing Pages','E-Commerce']},
+    {icon:'📱',n:'04',name:'App Development',desc:'Mobile apps, web apps, automation tools, and custom software. Built for real users, engineered to scale globally from day one.',tags:['Mobile','Web Apps','Automation']},
+    {icon:'🛠️',n:'05',name:'IT Help & Support',desc:'Any tech problem — we solve it. Software troubleshooting, network setup, system configuration, and IT consultancy for individuals and businesses.',tags:['Troubleshooting','Networks','Co
