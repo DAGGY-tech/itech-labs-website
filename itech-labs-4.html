@@ -3,60 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Itech Labs Website</title>
+    <title>Itech Labs</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="particles.js"></script>
-    <script src="typewriter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div id="hero-section">
-        <h1>Welcome to Itech Labs</h1>
-        <div id="typewriter-container">
-            <h2 class="typewriter">Creative Solutions for Your Business</h2>
-        </div>
+    <div id="app">
+        <header class="hero">
+            <h1>Welcome to Itech Labs</h1>
+            <p>Your partner in technology.</p>
+        </header>
+        <section class="services">
+            <h2>Our Services</h2>
+            <ul>
+                <li>Web Development</li>
+                <li>Mobile App Development</li>
+                <li>Cloud Solutions</li>
+            </ul>
+        </section>
+        <section class="projects">
+            <h2>Our Projects</h2>
+            <p>Check out our portfolio of completed projects.</p>
+        </section>
+        <section class="availability">
+            <h2>Availability</h2>
+            <p>Contact us for your next project.</p>
+        </section>
+        <section class="about">
+            <h2>About Us</h2>
+            <p>We are a leading technology solutions provider.</p>
+        </section>
+        <section class="contact">
+            <h2>Contact Us</h2>
+            <form>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+        <footer>
+            <p>© 2026 Itech Labs. All rights reserved.</p>
+        </footer>
     </div>
-    <section id="services">
-        <h2>Our Services</h2>
-        <ul>
-            <li>Web Development</li>
-            <li>Mobile Application Development</li>
-            <li>Cloud Solutions</li>
-        </ul>
-    </section>
-    <section id="projects">
-        <h2>Our Projects</h2>
-        <p>Check out our amazing projects here.</p>
-    </section>
-    <section id="availability">
-        <h2>Availability</h2>
-        <p>We are available for new projects. Get in touch!</p>
-    </section>
-    <section id="about">
-        <h2>About Us</h2>
-        <p>We are a team of passionate developers.</p>
-    </section>
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <p>Email: contact@itechlabs.com</p>
-    </section>
-    <footer>
-        <p>&copy; 2026 Itech Labs. All Rights Reserved.</p>
-    </footer>
     <script>
-        // Initialize particles
-        particlesJS.load('particles-js', 'particles.json', function() {
-            console.log('callback - particles.js config loaded');
-        });
-
-        // Typewriter effect
-        const typewriter = new Typewriter('#typewriter-container', {
-          loop: true,
-        });
-        typewriter
-          .typeString('Creative Solutions for Your Business')
-          .pauseFor(2500)
-          .deleteAll()
-          .start();
+        // Custom cursor and interactivity goes here
     </script>
 </body>
 </html>
